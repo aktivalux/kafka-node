@@ -5,6 +5,7 @@ const Client = kafka.KafkaClient;
 const sinon = require('sinon');
 const TimeoutError = require('../lib/errors/TimeoutError');
 const TopicsNotExistError = require('../lib/errors/TopicsNotExistError');
+const SaslAuthenticationError = require('../lib/errors/SaslAuthenticationError');
 const BrokerWrapper = require('../lib/wrapper/BrokerWrapper');
 const FakeSocket = require('./mocks/mockSocket');
 const should = require('should');
@@ -527,12 +528,12 @@ describe('Kafka Client', function () {
         }
       });
       client.once('error', function (err) {
-        // we expect a SaslAuthenticationError with code 58
-        if (err.errorCode !== 58) {
-          done(err);
+        // TODO check for error codes etc. if available
+        if (err instanceof SaslAuthenticationError) {
+          done();
           return;
         }
-        done();
+        done(err);
       });
       client.once('ready', function () {
         var err = new Error('expected error!');
