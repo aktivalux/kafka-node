@@ -5,7 +5,6 @@ const Client = kafka.KafkaClient;
 const sinon = require('sinon');
 const TimeoutError = require('../lib/errors/TimeoutError');
 const TopicsNotExistError = require('../lib/errors/TopicsNotExistError');
-const SaslAuthenticationError = require('../lib/errors/SaslAuthenticationError');
 const BrokerWrapper = require('../lib/wrapper/BrokerWrapper');
 const FakeSocket = require('./mocks/mockSocket');
 const should = require('should');
@@ -539,7 +538,7 @@ describe('Kafka Client', function () {
             retries: 0
           }
         });
-        client.once('auth_error', function (err) {
+        client.once('auth_error', function () {
           done();
         });
         client.once('ready', function () {
